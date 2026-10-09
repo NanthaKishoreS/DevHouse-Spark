@@ -19,7 +19,8 @@ import numpy as np
 from flask_compress import Compress
 from flask_caching import Cache
 
-app = Flask(__name__, static_folder='.')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, static_folder=None)
 Compress(app)
 cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 60})
 app.config['JSON_SORT_KEYS'] = False
@@ -118,7 +119,7 @@ def block_sensitive_static_files():
 # ---------------------------------------------------------------------------
 # OUTPUTS / CROPS DIRECTORY SETUP
 # ---------------------------------------------------------------------------
-OUTPUTS_DIR = os.path.join(os.path.dirname(__file__), 'outputs')
+OUTPUTS_DIR = os.path.join(BASE_DIR, 'outputs')
 CROPS_DIR = os.path.join(OUTPUTS_DIR, 'crops')
 UPLOADS_DIR = os.path.join(OUTPUTS_DIR, 'workflow_uploads')
 EVIDENCE_DIR = os.path.join(OUTPUTS_DIR, 'evidence')
@@ -131,8 +132,9 @@ logger = logging.getLogger("tarang.evidence")
 # ---------------------------------------------------------------------------
 # YOLO MODEL - loaded once at startup
 # ---------------------------------------------------------------------------
+MODEL_PATH = os.path.join(BASE_DIR, 'best.pt')
 print("Loading YOLO model 'best.pt'...")
-model = YOLO('best.pt')
+model = YOLO(MODEL_PATH)
 print("Model loaded successfully. Classes:", model.names)
 
 # ---------------------------------------------------------------------------
@@ -1069,7 +1071,7 @@ XTF_SURVEYS = {}
 
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory(BASE_DIR, 'index.html')
 
 @app.route('/outputs/<path:filename>')
 def serve_output(filename):
@@ -3965,45 +3967,46 @@ startxref
 
 @app.route('/static/models/<path:filename>')
 def serve_model_file(filename):
-    return send_from_directory('static/models', filename, mimetype='model/gltf-binary')
+    return send_from_directory(os.path.join(BASE_DIR, 'static/models'), filename, mimetype='model/gltf-binary')
 
 @app.route('/drone.glb')
 @app.route('/Drone.glb')
 def serve_drone_root():
-    if os.path.exists('static/models/drone.glb'):
-        return send_from_directory('static/models', 'drone.glb', mimetype='model/gltf-binary')
-    return send_from_directory('.', 'Drone.glb', mimetype='model/gltf-binary')
+    model_file = os.path.join(BASE_DIR, 'static/models/drone.glb')
+    if os.path.exists(model_file):
+        return send_from_directory(os.path.join(BASE_DIR, 'static/models'), 'drone.glb', mimetype='model/gltf-binary')
+    return send_from_directory(BASE_DIR, 'Drone.glb', mimetype='model/gltf-binary')
 
 # Root assets and the two static folders used by the browser. These explicit
 # rules intentionally avoid a greedy /<path> fallback: that fallback matches
 # /api/... before Flask can dispatch POST requests to API routes.
 @app.route('/<filename>')
 def serve_root_file(filename):
-    return send_from_directory('.', filename)
+    return send_from_directory(BASE_DIR, filename)
 
 @app.route('/js/<path:filename>')
 def serve_js_file(filename):
-    return send_from_directory('js', filename)
+    return send_from_directory(os.path.join(BASE_DIR, 'js'), filename)
 
 @app.route('/assets/<path:filename>')
 def serve_asset_file(filename):
-    return send_from_directory('assets', filename)
+    return send_from_directory(os.path.join(BASE_DIR, 'assets'), filename)
 
 @app.route('/static/<path:filename>')
 def serve_static_file(filename):
-    return send_from_directory('static', filename)
+    return send_from_directory(os.path.join(BASE_DIR, 'static'), filename)
 
 @app.route('/video/<path:filename>')
 def serve_video_file(filename):
-    return send_from_directory('video', filename)
+    return send_from_directory(os.path.join(BASE_DIR, 'video'), filename)
 
 @app.route('/simulation/<path:filename>')
 def serve_simulation_file(filename):
-    return send_from_directory('Simulation/dist', filename)
+    return send_from_directory(os.path.join(BASE_DIR, 'Simulation/dist'), filename)
 
 @app.route('/simulation/')
 def serve_simulation_index():
-    return send_from_directory('Simulation/dist', 'index.html')
+    return send_from_directory(os.path.join(BASE_DIR, 'Simulation/dist'), 'index.html')
 
 @app.route('/api/v1/simulation-data/<detection_id>', methods=['GET'])
 def get_simulation_data(detection_id):

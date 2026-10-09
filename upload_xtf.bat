@@ -1,4 +1,5 @@
 @echo off
-cd /d "c:\Users\KAVIYA\Downloads\Latest_Proj_File\Smart India Hacathon 2026 new"
-C:\Users\KAVIYA\anaconda3\python.exe upload_xtf.py > upload_xtf_result.txt 2>&1
-echo DONE > upload_xtf_done.txt
+cd /d "%~dp0"
+if not exist artifacts\reports mkdir artifacts\reports
+py -3 tools\qa\upload_xtf.py > artifacts\reports\upload_xtf_console.txt 2>&1
+echo DONE > artifacts\reports\upload_xtf_done.txt

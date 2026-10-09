@@ -7,9 +7,22 @@ venv/
 ENV/
 env/
 
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+
 # Node
 node_modules/
 frontend/node_modules/
+Simulation/node_modules/
+
+# Local build and runtime data
+artifacts/
+*.log
+token.tmp
+test_results.txt
+.kilo/worktrees/
 
 # Outputs & Data
 outputs/
