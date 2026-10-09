@@ -137,7 +137,7 @@
 <!-- Top Navigation / Brand Header -->
 <div class="absolute top-6 left-6 md:left-12 z-10 flex items-center gap-3">
   <div class="w-12 h-12 rounded-full overflow-hidden border border-teal-500/30 bg-[#020b15]/80 backdrop-blur p-1 flex items-center justify-center shrink-0 shadow-lg shadow-teal-500/10">
-    <img src="logoimage.jpg" class="w-full h-full object-contain rounded-full" alt="TARANG Logo" />
+    <img src="logoimage.jpg" class="w-full h-full object-contain rounded-full" alt="TARANG Logo" / loading="lazy">
   </div>
   <div class="flex flex-col">
     <span class="text-xs font-mono font-bold tracking-widest text-teal-400 uppercase">TARANG // तरंग</span>
@@ -182,6 +182,20 @@
             <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
         </a>
+        <!-- Live Session button — opens the TARANG sonar simulation overlay -->
+        <button
+          id="hero-live-session-btn"
+          onclick="if(window.tarangOpenSimulation){tarangOpenSimulation()}else{window.location.href='/simulation/'}"
+          class="enter-btn px-8 py-4 rounded-full font-semibold tracking-wider text-sm md:text-base uppercase inline-flex items-center gap-3 cursor-pointer"
+          style="color:#5eead4;border-color:rgba(20,184,166,0.7);background:rgba(20,184,166,0.08)"
+        >
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#14B8A6;animation:pulse 1.5s infinite;flex-shrink:0"></span>
+          <span>Live Session</span>
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49"/>
+          </svg>
+        </button>
       </div>
     </div>
 <!-- Bottom Right Star Lottie -->
@@ -203,5 +217,6 @@
       }
     });
   </script>
+<script src="/js/chatbot.js" defer></script>
 </body>
 </html>
